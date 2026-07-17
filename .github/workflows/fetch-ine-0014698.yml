@@ -1,0 +1,32 @@
+name: Fetch INE 0014698
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/fetch-ine-0014698.yml
+      - scripts/obter_ine_0014698.py
+      - ine-0014698-trigger.txt
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch full INE table
+        run: python3 scripts/obter_ine_0014698.py
+
+      - name: List outputs
+        run: ls -lah output
+
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ine-0014698-output
+          path: output/*
+          if-no-files-found: error
